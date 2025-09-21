@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import CategoryPieChart from './charts/CategoryPieChart';
+import MonthlyBarChart from './charts/MonthlyBarChart';
+import BudgetPerformanceChart from './charts/BudgetPerformanceChart';
 
 const Analytics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
@@ -409,6 +412,47 @@ const Analytics = () => {
         )}
       </div>
 
+      {/* Charts Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
+        gap: '2rem',
+        marginBottom: '2rem'
+      }}>
+        {/* Category Pie Chart */}
+        {Object.keys(analytics.categoryStats).length > 0 && (
+          <div style={{
+            backgroundColor: 'white',
+            padding: '1.5rem',
+            borderRadius: '8px',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <CategoryPieChart 
+              categoryStats={analytics.categoryStats} 
+              totalExpenses={analytics.totalExpenses} 
+            />
+          </div>
+        )}
+
+        {/* Spending Trend Bar Chart */}
+        {filteredExpenses.length > 0 && (
+          <div style={{
+            backgroundColor: 'white',
+            padding: '1.5rem',
+            borderRadius: '8px',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <MonthlyBarChart 
+              expenses={filteredExpenses} 
+              selectedPeriod={selectedPeriod} 
+            />
+          </div>
+        )}
+
+      </div>
+
       {/* Budget Performance */}
       {budgets.filter(budget => budget.month === new Date().getMonth() + 1 && budget.year === new Date().getFullYear()).length > 0 && (
         <div style={{
@@ -416,7 +460,8 @@ const Analytics = () => {
           padding: '1.5rem',
           borderRadius: '8px',
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
+          border: '1px solid #e5e7eb',
+          marginBottom: '2rem'
         }}>
           <h3 style={{
             fontSize: '1.25rem',
@@ -427,6 +472,12 @@ const Analytics = () => {
             Budget Performance
           </h3>
           
+          {/* Budget Performance Chart */}
+          <div style={{ marginBottom: '2rem' }}>
+            <BudgetPerformanceChart budgetPerformance={analytics.budgetPerformance} />
+          </div>
+          
+          {/* Budget Performance List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {analytics.budgetPerformance.map((budget) => {
               const statusColor = budget.percentage >= 100 ? '#ef4444' : 
