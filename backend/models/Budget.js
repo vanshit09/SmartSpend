@@ -67,8 +67,14 @@ budgetSchema.pre('save', function(next) {
   next();
 });
 
-// Ensure one budget per category per month per user
-budgetSchema.index({ user: 1, category: 1, month: 1, year: 1 }, { unique: true });
+// Update the updatedAt field before findOneAndUpdate
+budgetSchema.pre('findOneAndUpdate', function(next) {
+  this.set({ updatedAt: Date.now() });
+  next();
+});
+
+// Index for performance (not unique - we handle duplicates in code)
+budgetSchema.index({ user: 1, category: 1, month: 1, year: 1 });
 
 module.exports = mongoose.model('Budget', budgetSchema);
 

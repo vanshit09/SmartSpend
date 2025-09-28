@@ -383,7 +383,7 @@ const BudgetManagement = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteBudget(budget.id)}
+                    onClick={() => handleDeleteBudget(budget._id)}
                     style={{
                       flex: 1,
                       padding: '0.5rem',
